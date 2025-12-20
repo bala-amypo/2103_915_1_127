@@ -1,5 +1,9 @@
 package com.example.demo.repository;
 
-public class ComplaintStatusRepository {
-    
+import com.example.demo.entity.Complaint;
+import java.util.List;
+
+public interface ComplaintStatusRepository {
+
+    List<Complaint> findByStatus(Complaint.Status status);
 }
