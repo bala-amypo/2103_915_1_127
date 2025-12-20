@@ -1,5 +1,9 @@
 package com.example.demo.repository;
 
-public class PriorityRuleRepository {
-    
+import com.example.demo.entity.PriorityRule;
+import java.util.List;
+
+public interface PriorityRuleRepository {
+
+    List<PriorityRule> findByActiveTrue();
 }
