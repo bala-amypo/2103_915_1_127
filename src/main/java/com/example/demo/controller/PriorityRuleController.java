@@ -1,13 +1,24 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.PriorityRule;
+import com.example.demo.service.PriorityRuleService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/rules")
 public class PriorityRuleController {
 
-    @GetMapping
-    public String getRules() {
-        return "rules";
+    private final PriorityRuleService priorityRuleService;
+
+    public PriorityRuleController(PriorityRuleService priorityRuleService) {
+        this.priorityRuleService = priorityRuleService;
+    }
+
+    // GET /rules/all
+    @GetMapping("/all")
+    public List<PriorityRule> getAllRules() {
+        return priorityRuleService.getActiveRules();
     }
 }

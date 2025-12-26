@@ -1,15 +1,14 @@
 package com.example.demo.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/status")
 public class StatusController {
 
-    @GetMapping
-    public String status() {
-        return "OK";
+    // GET /status/history/{complaintId}
+    @GetMapping("/history/{complaintId}")
+    public String getStatusHistory(@PathVariable Long complaintId) {
+        return "Status history for complaint id: " + complaintId;
     }
 }
