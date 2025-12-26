@@ -21,7 +21,8 @@ public class AuthController {
             @RequestParam String email,
             @RequestParam String password) {
 
-        User user = userService.registerCustomer(name, email, password);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(
+                userService.registerCustomer(name, email, password)
+        );
     }
 }

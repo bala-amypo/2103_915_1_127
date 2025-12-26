@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     public User registerCustomer(String name, String email, String password) {
 
         User user = new User();
-        user.setName(name);
+        user.setName(name); // ✅ now exists
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(User.Role.CUSTOMER);
