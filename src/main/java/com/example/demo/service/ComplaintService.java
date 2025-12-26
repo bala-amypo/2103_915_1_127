@@ -10,5 +10,5 @@ public interface ComplaintService {
 
     Complaint submitComplaint(ComplaintRequest request, User user);
 
-    List<Complaint> getPrioritizedComplaints();
+    List<Complaint> getAllComplaints();
 }

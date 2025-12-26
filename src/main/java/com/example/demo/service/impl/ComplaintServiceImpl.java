@@ -17,22 +17,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository complaintRepository;
     private final PriorityRuleService priorityRuleService;
 
-    // 🔥 Hidden tests expect this constructor
-    public ComplaintServiceImpl(
-            ComplaintRepository complaintRepository,
-            Object ignored1,
-            Object ignored2,
-            PriorityRuleService priorityRuleService
-    ) {
-        this.complaintRepository = complaintRepository;
-        this.priorityRuleService = priorityRuleService;
-    }
-
-    // Spring usage
-    public ComplaintServiceImpl(
-            ComplaintRepository complaintRepository,
-            PriorityRuleService priorityRuleService
-    ) {
+    public ComplaintServiceImpl(ComplaintRepository complaintRepository,
+                                PriorityRuleService priorityRuleService) {
         this.complaintRepository = complaintRepository;
         this.priorityRuleService = priorityRuleService;
     }
@@ -41,22 +27,24 @@ public class ComplaintServiceImpl implements ComplaintService {
     public Complaint submitComplaint(ComplaintRequest request, User user) {
 
         Complaint complaint = new Complaint();
+        complaint.setTitle(request.getTitle());
+        complaint.setDescription(request.getDescription());
         complaint.setCategory(request.getCategory());
         complaint.setChannel(request.getChannel());
-        complaint.setSeverity(request.getSeverity());
-        complaint.setUrgency(request.getUrgency());
+        complaint.setSeverity(Complaint.Severity.valueOf(request.getSeverity()));
+        complaint.setUrgency(Complaint.Urgency.valueOf(request.getUrgency()));
         complaint.setUser(user);
+        complaint.setStatus(Complaint.Status.OPEN);
         complaint.setCreatedAt(LocalDateTime.now());
 
-        int score = priorityRuleService.calculatePriority(request.getCategory());
+        int score = priorityRuleService.computePriorityScore(complaint);
         complaint.setPriorityScore(score);
 
         return complaintRepository.save(complaint);
     }
 
     @Override
-    public List<Complaint> getPrioritizedComplaints() {
-        return complaintRepository
-                .findAllOrderByPriorityScoreDescCreatedAtAsc();
+    public List<Complaint> getAllComplaints() {
+        return complaintRepository.findAllOrderByPriorityScoreDescCreatedAtAsc();
     }
 }
