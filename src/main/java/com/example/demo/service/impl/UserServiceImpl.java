@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.User;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,39 +13,33 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // ✅ TEST EXPECTS THIS CONSTRUCTOR
-    public UserServiceImpl(UserRepository repo,
-                           PasswordEncoder encoder) {
-        this.userRepository = repo;
-        this.passwordEncoder = encoder;
+    // Constructor used in tests
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // ==============================
-    // Existing
-    // ==============================
     @Override
-    public User registerUser(User u) {
-        u.setPassword(passwordEncoder.encode(u.getPassword()));
-        return userRepository.save(u);
+    public User registerCustomer(String name, String email, String rawPassword) {
+
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("email already exists");
+        }
+
+        User user = new User();
+        user.setFullName(name);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(rawPassword));
+        user.setRole(User.Role.CUSTOMER);
+
+        return userRepository.save(user);
     }
 
-    // ==============================
-    // REQUIRED BY AuthController
-    // ==============================
-    @Override
-    public User registerCustomer(String email, String password, String role) {
-        User u = new User();
-        u.setEmail(email);
-        u.setPassword(passwordEncoder.encode(password));
-        u.setRole(role);
-        return userRepository.save(u);
-    }
-
-    // ==============================
-    // REQUIRED BY ComplaintController
-    // ==============================
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found"));
     }
 }
