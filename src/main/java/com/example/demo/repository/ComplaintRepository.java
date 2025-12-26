@@ -9,8 +9,9 @@ import java.util.List;
 
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
-    List<Complaint> findByCustomer(User customer);
+    List<Complaint> findByCustomer(User user);
 
-    @Query("SELECT c FROM Complaint c ORDER BY c.priorityScore DESC, c.createdAt ASC")
-    List<Complaint> findAllOrderByPriorityScoreDescCreatedAtAsc();
+    // 🔥 REQUIRED BY SERVICE + TESTS
+    @Query("SELECT c FROM Complaint c ORDER BY c.priorityScore DESC")
+    List<Complaint> findAllOrderByPriorityScoreDesc();
 }
