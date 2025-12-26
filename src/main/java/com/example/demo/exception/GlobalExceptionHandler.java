@@ -41,6 +41,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
+    // LAST fallback – should be hit rarely
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneric(
             Exception ex) {
