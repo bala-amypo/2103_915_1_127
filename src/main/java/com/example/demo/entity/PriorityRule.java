@@ -13,11 +13,13 @@ public class PriorityRule {
 
     private String ruleName;
 
-    private String category;   // ✅ REQUIRED BY TESTS
+    private String description;
 
-    private int weight;        // ✅ REQUIRED
+    private String category;
 
-    private boolean active;    // ✅ REQUIRED
+    private int weight;
+
+    private boolean active = true;
 
     @ManyToMany(mappedBy = "priorityRules")
     private List<Complaint> complaints = new ArrayList<>();
@@ -28,7 +30,7 @@ public class PriorityRule {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id) {       // ✅ tests use this
         this.id = id;
     }
 
@@ -40,7 +42,15 @@ public class PriorityRule {
         this.ruleName = ruleName;
     }
 
-    public String getCategory() {          // ✅ THIS FIXES YOUR ERROR
+    public String getDescription() {   // ✅ REQUIRED
+        return description;
+    }
+
+    public void setDescription(String description) { // ✅ REQUIRED
+        this.description = description;
+    }
+
+    public String getCategory() {
         return category;
     }
 
@@ -48,7 +58,7 @@ public class PriorityRule {
         this.category = category;
     }
 
-    public int getWeight() {
+    public int getWeight() {            // ✅ REQUIRED
         return weight;
     }
 
@@ -64,7 +74,7 @@ public class PriorityRule {
         this.active = active;
     }
 
-    public List<Complaint> getComplaints() {
+    public List<Complaint> getComplaints() { // ✅ REQUIRED
         return complaints;
     }
 }
