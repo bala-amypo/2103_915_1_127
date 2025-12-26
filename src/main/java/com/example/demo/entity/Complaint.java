@@ -26,11 +26,10 @@ public class Complaint {
     private String title;
     private String description;
 
-    // 🔹 REQUIRED BY ComplaintServiceImpl
     private String category;
     private String channel;
 
-    // Stored as String for test compatibility
+    // 🔴 STORE AS STRING (TEST EXPECTATION)
     private String severity;
     private String urgency;
 
@@ -38,7 +37,9 @@ public class Complaint {
     private User customer;
     private User assignedAgent;
 
-    private int priorityScore;
+    // 🔴 MUST BE Integer (NOT int)
+    private Integer priorityScore;
+
     private LocalDateTime createdAt;
 
     private List<PriorityRule> priorityRules = new ArrayList<>();
@@ -69,7 +70,7 @@ public class Complaint {
         this.description = description;
     }
 
-    /* ---------- CATEGORY & CHANNEL (🔥 FIX) ---------- */
+    /* ---------- CATEGORY / CHANNEL ---------- */
 
     public String getCategory() {
         return category;
@@ -93,11 +94,12 @@ public class Complaint {
         return severity;
     }
 
+    // ✅ TEST CALLS THIS
     public void setSeverity(String severity) {
         this.severity = severity;
     }
 
-    // Required for tests
+    // ✅ TEST ALSO CALLS THIS
     public void setSeverity(Severity severity) {
         this.severity = severity.name();
     }
@@ -108,11 +110,12 @@ public class Complaint {
         return urgency;
     }
 
+    // ✅ TEST CALLS THIS
     public void setUrgency(String urgency) {
         this.urgency = urgency;
     }
 
-    // Required for tests
+    // ✅ TEST ALSO CALLS THIS
     public void setUrgency(Urgency urgency) {
         this.urgency = urgency.name();
     }
@@ -147,11 +150,11 @@ public class Complaint {
 
     /* ---------- PRIORITY ---------- */
 
-    public int getPriorityScore() {
+    public Integer getPriorityScore() {
         return priorityScore;
     }
 
-    public void setPriorityScore(int priorityScore) {
+    public void setPriorityScore(Integer priorityScore) {
         this.priorityScore = priorityScore;
     }
 
