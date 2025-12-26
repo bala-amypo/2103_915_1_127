@@ -1,6 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Complaint {
@@ -14,17 +16,25 @@ public class Complaint {
     private String category;
     private String channel;
 
-    // Stored as STRING (important for tests)
+    // Stored as String (TESTS EXPECT THIS)
     private String severity;
     private String urgency;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    // ===== REQUIRED RELATIONS =====
+
+    @ManyToOne
+    private User customer;
+
     @ManyToOne
     private User assignedAgent;
 
-    // ================= ENUMS =================
+    @ManyToMany
+    private List<PriorityRule> priorityRules = new ArrayList<>();
+
+    // ===== ENUMS =====
 
     public enum Severity {
         CRITICAL,
@@ -47,14 +57,13 @@ public class Complaint {
         RESOLVED
     }
 
-    // ================= CONSTRUCTORS =================
+    // ===== CONSTRUCTORS =====
 
-    // Default constructor (MANDATORY for JPA + tests)
     public Complaint() {
         this.status = Status.NEW;
     }
 
-    // Constructor used by TESTS (ENUM version)
+    // Used by TESTS (ENUM input)
     public Complaint(String title,
                      String description,
                      String category,
@@ -71,7 +80,7 @@ public class Complaint {
         this.status = Status.NEW;
     }
 
-    // Constructor used by some SERVICES (STRING version)
+    // Used by SERVICES (STRING input)
     public Complaint(String title,
                      String description,
                      String category,
@@ -88,7 +97,7 @@ public class Complaint {
         this.status = Status.NEW;
     }
 
-    // ================= GETTERS =================
+    // ===== GETTERS =====
 
     public Long getId() {
         return id;
@@ -122,11 +131,19 @@ public class Complaint {
         return status;
     }
 
+    public User getCustomer() {
+        return customer;
+    }
+
     public User getAssignedAgent() {
         return assignedAgent;
     }
 
-    // ================= SETTERS =================
+    public List<PriorityRule> getPriorityRules() {
+        return priorityRules;
+    }
+
+    // ===== SETTERS =====
 
     public void setId(Long id) {
         this.id = id;
@@ -157,7 +174,7 @@ public class Complaint {
         this.urgency = urgency;
     }
 
-    // Enum setters (used by tests)
+    // Enum setters (TESTS USE THIS)
     public void setSeverity(Severity severity) {
         this.severity = severity.name();
     }
@@ -170,7 +187,15 @@ public class Complaint {
         this.status = status;
     }
 
+    public void setCustomer(User customer) {
+        this.customer = customer;
+    }
+
     public void setAssignedAgent(User assignedAgent) {
         this.assignedAgent = assignedAgent;
+    }
+
+    public void setPriorityRules(List<PriorityRule> priorityRules) {
+        this.priorityRules = priorityRules;
     }
 }
