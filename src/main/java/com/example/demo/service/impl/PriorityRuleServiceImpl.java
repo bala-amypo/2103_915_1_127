@@ -18,16 +18,20 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
     }
 
     @Override
-    public int computePriorityScore(Complaint complaint) {
-        int score = 0;
-        for (PriorityRule rule : priorityRuleRepository.findByActiveTrue()) {
-            score += rule.apply(complaint);
+    public void applyRules(Complaint complaint) {
+
+        List<PriorityRule> rules = priorityRuleRepository.findAll();
+
+        for (PriorityRule rule : rules) {
+            if (rule.isActive()) {
+                // 🔥 FIX: no + operator, just apply
+                rule.apply(complaint);
+            }
         }
-        return score;
     }
 
     @Override
-    public List<PriorityRule> getActiveRules() {
-        return priorityRuleRepository.findByActiveTrue();
+    public List<PriorityRule> getAllRules() {
+        return priorityRuleRepository.findAll();
     }
 }
