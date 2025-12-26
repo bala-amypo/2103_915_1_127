@@ -1,46 +1,61 @@
 package com.example.demo.entity;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@Entity
 public class Complaint {
 
-    public enum Severity {
-        LOW,
-        MEDIUM,
-        HIGH
-    }
-
-    public enum Urgency {
-        LOW,
-        MEDIUM,
-        HIGH
-    }
-
-    public enum Status {
-        NEW,
-        IN_PROGRESS,
-        RESOLVED
-    }
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
+
     private String description;
     private String category;
     private String channel;
-    private Severity severity;
-    private Urgency urgency;
-    private Status status;
-    private int priorityScore;
-    private User customer;
-    private LocalDateTime createdAt;
 
-    public Complaint() {}
+    @Enumerated(EnumType.STRING)
+    private Severity severity;
+
+    @Enumerated(EnumType.STRING)
+    private Urgency urgency;
+
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.NEW;
+
+    private int priorityScore;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @ManyToOne
+    private User customer;
+
+    @ManyToOne
+    private User assignedAgent;
+
+    @ManyToMany
+    private List<PriorityRule> priorityRules = new ArrayList<>();
+
+    /* ================= ENUMS ================= */
+
+    public enum Severity {
+        LOW, MEDIUM, HIGH, CRITICAL
+    }
+
+    public enum Urgency {
+        LOW, MEDIUM, HIGH, IMMEDIATE
+    }
+
+    public enum Status {
+        NEW, IN_PROGRESS, RESOLVED
+    }
+
+    /* ================= GETTERS / SETTERS ================= */
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
@@ -63,9 +78,16 @@ public class Complaint {
     public int getPriorityScore() { return priorityScore; }
     public void setPriorityScore(int priorityScore) { this.priorityScore = priorityScore; }
 
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+
     public User getCustomer() { return customer; }
     public void setCustomer(User customer) { this.customer = customer; }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public User getAssignedAgent() { return assignedAgent; }
+    public void setAssignedAgent(User assignedAgent) { this.assignedAgent = assignedAgent; }
+
+    public List<PriorityRule> getPriorityRules() {
+        return priorityRules;
+    }
 }

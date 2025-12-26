@@ -5,30 +5,20 @@ import com.example.demo.entity.PriorityRule;
 import com.example.demo.repository.PriorityRuleRepository;
 import com.example.demo.service.PriorityRuleService;
 
-import java.util.List;
-
 public class PriorityRuleServiceImpl implements PriorityRuleService {
 
-    private final PriorityRuleRepository priorityRuleRepository;
+    private PriorityRuleRepository repository;
 
-    public PriorityRuleServiceImpl(PriorityRuleRepository priorityRuleRepository) {
-        this.priorityRuleRepository = priorityRuleRepository;
+    public PriorityRuleServiceImpl(PriorityRuleRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public int computePriorityScore(Complaint complaint) {
+    public int calculatePriorityScore(Complaint complaint) {
         int score = 0;
-
-        for (PriorityRule rule : getActiveRules()) {
+        for (PriorityRule rule : complaint.getPriorityRules()) {
             score += rule.getWeight();
-            complaint.getPriorityRules().add(rule);
-            rule.getComplaints().add(complaint);
         }
         return score;
-    }
-
-    @Override
-    public List<PriorityRule> getActiveRules() {
-        return priorityRuleRepository.findByActiveTrue();
     }
 }
