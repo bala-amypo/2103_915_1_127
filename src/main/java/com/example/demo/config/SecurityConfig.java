@@ -21,9 +21,9 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
+    // REQUIRED by tests
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // REQUIRED by tests
         return new BCryptPasswordEncoder();
     }
 
@@ -37,24 +37,31 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
+            // Disable CSRF (JWT based security)
             .csrf(csrf -> csrf.disable())
-            .sessionManagement(sess ->
-                sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+            // Stateless session
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+
+            // Authorization rules
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/auth/**",
                         "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**",
+                        "/rules/all"       // ⭐ PUBLIC ENDPOINT
                 ).permitAll()
                 .anyRequest().authenticated()
-            );
+            )
 
-        // JWT filter (won’t affect mocked tests)
-        http.addFilterBefore(
+            // JWT filter
+            .addFilterBefore(
                 jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class
-        );
+            );
 
         return http.build();
     }
