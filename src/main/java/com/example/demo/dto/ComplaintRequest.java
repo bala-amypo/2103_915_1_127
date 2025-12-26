@@ -1,17 +1,16 @@
 package com.example.demo.dto;
 
-import com.example.demo.entity.Severity;
-import com.example.demo.entity.Urgency;
-
 public class ComplaintRequest {
 
-    private Long userId;        // 🔥 REQUIRED
+    private Long userId;
     private String title;
     private String description;
-    private Severity severity;
-    private Urgency urgency;
 
-    // ----- GETTERS -----
+    // ✅ ENUM-ah illa → String
+    private String severity;
+    private String urgency;
+
+    // ---------- GETTERS ----------
 
     public Long getUserId() {
         return userId;
@@ -25,15 +24,15 @@ public class ComplaintRequest {
         return description;
     }
 
-    public Severity getSeverity() {
+    public String getSeverity() {
         return severity;
     }
 
-    public Urgency getUrgency() {
+    public String getUrgency() {
         return urgency;
     }
 
-    // ----- SETTERS -----
+    // ---------- SETTERS ----------
 
     public void setUserId(Long userId) {
         this.userId = userId;
@@ -47,11 +46,11 @@ public class ComplaintRequest {
         this.description = description;
     }
 
-    public void setSeverity(Severity severity) {
+    public void setSeverity(String severity) {
         this.severity = severity;
     }
 
-    public void setUrgency(Urgency urgency) {
+    public void setUrgency(String urgency) {
         this.urgency = urgency;
     }
 }
