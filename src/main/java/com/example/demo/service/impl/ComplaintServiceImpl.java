@@ -7,6 +7,7 @@ import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -15,7 +16,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository complaintRepository;
     private final PriorityRuleService priorityRuleService;
 
-    // ✅ THIS CONSTRUCTOR FIXES THE ERROR
+    // ✅ Constructor Injection
     public ComplaintServiceImpl(
             ComplaintRepository complaintRepository,
             PriorityRuleService priorityRuleService
@@ -27,12 +28,10 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     public Complaint submitComplaint(Complaint complaint) {
 
-        // Null safety (important for tests)
         if (complaint.getPriorityRules() == null) {
-            complaint.setPriorityRules(new java.util.HashSet<>());
+            complaint.setPriorityRules(new HashSet<>());
         }
 
-        // Compute priority score
         int score = priorityRuleService.computePriorityScore(complaint);
         complaint.setPriorityScore(score);
 
@@ -51,5 +50,11 @@ public class ComplaintServiceImpl implements ComplaintService {
 
         complaint.setStatus(Complaint.Status.valueOf(status));
         complaintRepository.save(complaint);
+    }
+
+    // ✅ THIS METHOD FIXES YOUR CURRENT ERROR
+    @Override
+    public List<Complaint> getPrioritizedComplaints() {
+        return complaintRepository.findAllOrderByPriorityScoreDesc();
     }
 }
