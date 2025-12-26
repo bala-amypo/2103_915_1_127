@@ -4,9 +4,11 @@ import com.example.demo.entity.Complaint;
 import com.example.demo.entity.PriorityRule;
 import com.example.demo.repository.PriorityRuleRepository;
 import com.example.demo.service.PriorityRuleService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class PriorityRuleServiceImpl implements PriorityRuleService {
 
     private final PriorityRuleRepository priorityRuleRepository;
@@ -17,7 +19,6 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
 
     @Override
     public int computePriorityScore(Complaint complaint) {
-
         int score = 0;
 
         if (complaint.getSeverity() != null) {
@@ -29,11 +30,8 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
         }
 
         List<PriorityRule> rules = priorityRuleRepository.findByActiveTrue();
-        if (rules != null) {
-            for (PriorityRule rule : rules) {
-                score += rule.getWeight();
-                complaint.getPriorityRules().add(rule);
-            }
+        for (PriorityRule rule : rules) {
+            score += rule.getWeight();
         }
 
         return score;
