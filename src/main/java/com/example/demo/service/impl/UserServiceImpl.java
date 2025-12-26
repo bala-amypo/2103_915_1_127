@@ -20,7 +20,6 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ✅ MATCH INTERFACE EXACTLY
     @Override
     public User registerCustomer(String name, String email, String password) {
 
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = new User();
-        user.setName(name);
+        user.setFullName(name);                 // ✅ FIXED HERE
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(User.Role.CUSTOMER);
