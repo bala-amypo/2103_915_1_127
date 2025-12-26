@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rules")
+@RequestMapping("/priority-rules")
 public class PriorityRuleController {
 
     private final PriorityRuleService priorityRuleService;
@@ -16,12 +16,9 @@ public class PriorityRuleController {
         this.priorityRuleService = priorityRuleService;
     }
 
-    /**
-     * GET /rules/all
-     * List all active priority rules
-     */
-    @GetMapping("/all")
-    public List<PriorityRule> getAllRules() {
-        return priorityRuleService.getActiveRules();
+    // ✅ Interface has getAllRules(), NOT getActiveRules()
+    @GetMapping
+    public List<PriorityRule> getRules() {
+        return priorityRuleService.getAllRules();
     }
 }

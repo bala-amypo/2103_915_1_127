@@ -8,7 +8,6 @@ import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,16 +16,13 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository complaintRepository;
     private final PriorityRuleService priorityRuleService;
 
-    // ✅ Constructor exactly as tests expect
     public ComplaintServiceImpl(
             ComplaintRepository complaintRepository,
             PriorityRuleService priorityRuleService) {
-
         this.complaintRepository = complaintRepository;
         this.priorityRuleService = priorityRuleService;
     }
 
-    // ✅ Tests expect this signature
     @Override
     public Complaint submitComplaint(ComplaintRequest request, User user) {
 
@@ -44,15 +40,13 @@ public class ComplaintServiceImpl implements ComplaintService {
                 Complaint.Urgency.valueOf(request.getUrgency().toUpperCase())
         );
 
-        complaint.setCreatedAt(LocalDateTime.now());
+        // ❌ DO NOT set createdAt (no setter exists)
 
-        // ✅ Correct method name (matches interface + tests)
         priorityRuleService.calculatePriorityScore(complaint);
 
         return complaintRepository.save(complaint);
     }
 
-    // ✅ Tests expect this method
     @Override
     public List<Complaint> getPrioritizedComplaints() {
         return complaintRepository
