@@ -12,15 +12,29 @@ public class PriorityRule {
     private Long id;
 
     private String ruleName;
-
     private String description;
-
     private int weight;
-
     private boolean active;
 
     @ManyToMany(mappedBy = "priorityRules")
     private List<Complaint> complaints = new ArrayList<>();
+
+    // 🔥 REQUIRED by PriorityRuleServiceImpl
+    public void apply(Complaint complaint) {
+        if (!active) return;
+
+        complaint.setPriorityScore(
+            complaint.getPriorityScore() + this.weight
+        );
+
+        if (!complaint.getPriorityRules().contains(this)) {
+            complaint.getPriorityRules().add(this);
+        }
+
+        if (!complaints.contains(complaint)) {
+            complaints.add(complaint);
+        }
+    }
 
     // ===== getters & setters =====
 
@@ -28,7 +42,7 @@ public class PriorityRule {
         return id;
     }
 
-    public void setId(Long id) { // tests need this
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -36,39 +50,35 @@ public class PriorityRule {
         return ruleName;
     }
 
-    public void setRuleName(String ruleName) { // tests need this
+    public void setRuleName(String ruleName) {
         this.ruleName = ruleName;
     }
 
     public String getDescription() {
         return description;
     }
-
-    public void setDescription(String description) { // tests need this
+ 
+    public void setDescription(String description) {
         this.description = description;
     }
 
     public int getWeight() {
         return weight;
     }
-
-    public void setWeight(int weight) { // tests need this
+ 
+    public void setWeight(int weight) {
         this.weight = weight;
     }
 
     public boolean isActive() {
         return active;
     }
-
-    public void setActive(boolean active) { // tests need this
+ 
+    public void setActive(boolean active) {
         this.active = active;
     }
 
-    public List<Complaint> getComplaints() { // tests need this
+    public List<Complaint> getComplaints() {
         return complaints;
-    }
-
-    public void setComplaints(List<Complaint> complaints) {
-        this.complaints = complaints;
     }
 }

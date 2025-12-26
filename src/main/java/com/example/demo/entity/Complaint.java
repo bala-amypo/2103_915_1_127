@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,15 +17,20 @@ public class Complaint {
     }
 
     public enum Status {
-        NEW, IN_PROGRESS, RESOLVED
+        NEW,
+        OPEN,        // 🔥 REQUIRED
+        IN_PROGRESS,
+        RESOLVED
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String category;
+    private String title;        // 🔥 REQUIRED
+    private String description;  // 🔥 REQUIRED
 
+    private String category;
     private String channel;
 
     @Enumerated(EnumType.STRING)
@@ -34,9 +40,11 @@ public class Complaint {
     private Urgency urgency;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.NEW;
+    private Status status = Status.OPEN;
 
     private int priorityScore;
+
+    private LocalDateTime createdAt; // 🔥 REQUIRED
 
     @ManyToOne
     private User customer;
@@ -58,15 +66,33 @@ public class Complaint {
         return id;
     }
 
-    public void setId(Long id) { // tests need this
+    public void setId(Long id) {
         this.id = id;
+    }
+
+    // 🔥 REQUIRED by ComplaintController
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    // 🔥 REQUIRED by ComplaintController
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) { // tests need this
+    public void setCategory(String category) {
         this.category = category;
     }
 
@@ -74,7 +100,7 @@ public class Complaint {
         return channel;
     }
 
-    public void setChannel(String channel) { // tests need this
+    public void setChannel(String channel) {
         this.channel = channel;
     }
 
@@ -110,6 +136,15 @@ public class Complaint {
         this.priorityScore = priorityScore;
     }
 
+    // 🔥 REQUIRED by ComplaintServiceImpl
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public User getCustomer() {
         return customer;
     }
@@ -122,11 +157,11 @@ public class Complaint {
         return assignedAgent;
     }
 
-    public void setAssignedAgent(User assignedAgent) { // tests need this
+    public void setAssignedAgent(User assignedAgent) {
         this.assignedAgent = assignedAgent;
     }
 
-    public List<PriorityRule> getPriorityRules() { // tests need this
+    public List<PriorityRule> getPriorityRules() {
         return priorityRules;
     }
 
