@@ -3,39 +3,41 @@ package com.example.demo.dto;
 public class AuthResponse {
 
     private String token;
-    private String role;
     private Long userId;
+    private String email;
+    private String role;
 
     public AuthResponse() {
     }
 
-    public AuthResponse(String token, String role, Long userId) {
+    // Existing constructor (keep)
+    public AuthResponse(String token, String email, Long userId) {
         this.token = token;
-        this.role = role;
+        this.email = email;
         this.userId = userId;
+    }
+
+    // Required for STEP-5 controllers
+    public AuthResponse(String token, Long userId, String email, String role) {
+        this.token = token;
+        this.userId = userId;
+        this.email = email;
+        this.role = role;
     }
 
     public String getToken() {
         return token;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
     public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public String getEmail() {
+        return email;
+    }
+
+    public String getRole() {
+        return role;
     }
 }
