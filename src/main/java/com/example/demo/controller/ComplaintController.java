@@ -23,52 +23,36 @@ public class ComplaintController {
         this.userService = userService;
     }
 
-    /**
-     * POST /complaints/submit
-     * Submit a new complaint
-     */
     @PostMapping("/submit")
     public ComplaintResponse submitComplaint(@RequestBody ComplaintRequest request) {
 
-        // In real apps, user comes from JWT / security context
         User user = userService.findById(1L);
 
         Complaint complaint = complaintService.submitComplaint(request, user);
 
+        // ✅ FIXED constructor order
         return new ComplaintResponse(
                 complaint.getId(),
-                complaint.getStatus().name(),
-                complaint.getPriorityScore()
+                complaint.getPriorityScore(),
+                complaint.getStatus().name()
         );
     }
 
-    /**
-     * GET /complaints/user/{userId}
-     * Get complaints for a specific user
-     */
     @GetMapping("/user/{userId}")
     public List<Complaint> getUserComplaints(@PathVariable Long userId) {
         User user = userService.findById(userId);
         return complaintService.getComplaintsForUser(user);
     }
 
-    /**
-     * GET /complaints/prioritized
-     * Get all prioritized complaints
-     */
     @GetMapping("/prioritized")
     public List<Complaint> getPrioritizedComplaints() {
         return complaintService.getPrioritizedComplaints();
     }
 
-    /**
-     * PUT /complaints/status/{id}
-     * Update complaint status
-     */
     @PutMapping("/status/{id}")
-    public String updateComplaintStatus(@PathVariable Long id,
-                                        @RequestParam String status) {
+    public String updateStatus(@PathVariable Long id,
+                               @RequestParam String status) {
         complaintService.updateStatus(id, status);
-        return "Complaint status updated successfully";
+        return "Status updated successfully";
     }
 }
