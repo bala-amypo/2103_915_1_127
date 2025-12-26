@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Complaint {
 
-    /* ================= ENUMS (TEST EXPECTS THESE) ================= */
+    /* ================= ENUMS ================= */
 
     public enum Severity {
         CRITICAL, HIGH, MEDIUM, LOW
@@ -26,7 +26,11 @@ public class Complaint {
     private String title;
     private String description;
 
-    // 🔥 IMPORTANT: STORE AS STRING
+    // 🔹 REQUIRED BY ComplaintServiceImpl
+    private String category;
+    private String channel;
+
+    // Stored as String for test compatibility
     private String severity;
     private String urgency;
 
@@ -65,7 +69,25 @@ public class Complaint {
         this.description = description;
     }
 
-    /* ---------- SEVERITY (STRING BACKED, ENUM FRIENDLY) ---------- */
+    /* ---------- CATEGORY & CHANNEL (🔥 FIX) ---------- */
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    /* ---------- SEVERITY ---------- */
 
     public String getSeverity() {
         return severity;
@@ -75,12 +97,12 @@ public class Complaint {
         this.severity = severity;
     }
 
-    // ✅ REQUIRED FOR TESTS
+    // Required for tests
     public void setSeverity(Severity severity) {
         this.severity = severity.name();
     }
 
-    /* ---------- URGENCY (STRING BACKED, ENUM FRIENDLY) ---------- */
+    /* ---------- URGENCY ---------- */
 
     public String getUrgency() {
         return urgency;
@@ -90,7 +112,7 @@ public class Complaint {
         this.urgency = urgency;
     }
 
-    // ✅ REQUIRED FOR TESTS
+    // Required for tests
     public void setUrgency(Urgency urgency) {
         this.urgency = urgency.name();
     }
