@@ -16,14 +16,17 @@ public class Complaint {
     private String category;
     private String channel;
 
-    // Stored as String (TESTS EXPECT THIS)
+    // Stored as STRING (tests + services expect this)
     private String severity;
     private String urgency;
+
+    // ⭐ REQUIRED FOR TESTS
+    private Integer priorityScore;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    // ===== REQUIRED RELATIONS =====
+    // ===== RELATIONS =====
 
     @ManyToOne
     private User customer;
@@ -63,7 +66,7 @@ public class Complaint {
         this.status = Status.NEW;
     }
 
-    // Used by TESTS (ENUM input)
+    // ✅ TESTS USE THIS (ENUM INPUT)
     public Complaint(String title,
                      String description,
                      String category,
@@ -80,7 +83,7 @@ public class Complaint {
         this.status = Status.NEW;
     }
 
-    // Used by SERVICES (STRING input)
+    // ✅ SERVICES USE THIS (STRING INPUT)
     public Complaint(String title,
                      String description,
                      String category,
@@ -143,6 +146,11 @@ public class Complaint {
         return priorityRules;
     }
 
+    // ⭐ TESTS REQUIRE THIS
+    public Integer getPriorityScore() {
+        return priorityScore;
+    }
+
     // ===== SETTERS =====
 
     public void setId(Long id) {
@@ -165,7 +173,7 @@ public class Complaint {
         this.channel = channel;
     }
 
-    // String setters
+    // STRING setters
     public void setSeverity(String severity) {
         this.severity = severity;
     }
@@ -174,7 +182,7 @@ public class Complaint {
         this.urgency = urgency;
     }
 
-    // Enum setters (TESTS USE THIS)
+    // ENUM setters (TESTS USE THIS)
     public void setSeverity(Severity severity) {
         this.severity = severity.name();
     }
@@ -197,5 +205,10 @@ public class Complaint {
 
     public void setPriorityRules(List<PriorityRule> priorityRules) {
         this.priorityRules = priorityRules;
+    }
+
+    // ⭐ TESTS REQUIRE THIS (null-um accept pannum)
+    public void setPriorityScore(Integer priorityScore) {
+        this.priorityScore = priorityScore;
     }
 }
