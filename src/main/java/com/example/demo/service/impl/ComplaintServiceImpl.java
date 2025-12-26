@@ -26,10 +26,14 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     public Complaint submitComplaint(ComplaintRequest request, User user) {
         Complaint c = new Complaint();
+
         c.setTitle(request.getTitle());
         c.setDescription(request.getDescription());
-        c.setSeverity(request.getSeverity());
-        c.setUrgency(request.getUrgency());
+
+        // ✅ STRING → ENUM (TEST EXPECTED)
+        c.setSeverity(Complaint.Severity.valueOf(request.getSeverity()));
+        c.setUrgency(Complaint.Urgency.valueOf(request.getUrgency()));
+
         c.setCustomer(user);
         c.setStatus(Complaint.Status.NEW);
         c.setCreatedAt(LocalDateTime.now());
