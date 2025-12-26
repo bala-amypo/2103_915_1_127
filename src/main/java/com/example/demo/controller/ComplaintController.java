@@ -23,37 +23,52 @@ public class ComplaintController {
         this.userService = userService;
     }
 
-    // POST /complaints/submit
+    /**
+     * POST /complaints/submit
+     * Submit a new complaint
+     */
     @PostMapping("/submit")
     public ComplaintResponse submitComplaint(@RequestBody ComplaintRequest request) {
-        User user = userService.findByEmail("demo@example.com"); // sample user
+
+        // In real apps, user comes from JWT / security context
+        User user = userService.findById(1L);
+
         Complaint complaint = complaintService.submitComplaint(request, user);
 
         return new ComplaintResponse(
                 complaint.getId(),
-                complaint.getPriorityScore(),
-                complaint.getStatus().name()
+                complaint.getStatus().name(),
+                complaint.getPriorityScore()
         );
     }
 
-    // GET /complaints/user/{userId}
+    /**
+     * GET /complaints/user/{userId}
+     * Get complaints for a specific user
+     */
     @GetMapping("/user/{userId}")
     public List<Complaint> getUserComplaints(@PathVariable Long userId) {
         User user = userService.findById(userId);
         return complaintService.getComplaintsForUser(user);
     }
 
-    // GET /complaints/prioritized
+    /**
+     * GET /complaints/prioritized
+     * Get all prioritized complaints
+     */
     @GetMapping("/prioritized")
     public List<Complaint> getPrioritizedComplaints() {
         return complaintService.getPrioritizedComplaints();
     }
 
-    // PUT /complaints/status/{id}
+    /**
+     * PUT /complaints/status/{id}
+     * Update complaint status
+     */
     @PutMapping("/status/{id}")
-    public String updateStatus(@PathVariable Long id,
-                               @RequestParam String status) {
+    public String updateComplaintStatus(@PathVariable Long id,
+                                        @RequestParam String status) {
         complaintService.updateStatus(id, status);
-        return "Status updated successfully";
+        return "Complaint status updated successfully";
     }
 }

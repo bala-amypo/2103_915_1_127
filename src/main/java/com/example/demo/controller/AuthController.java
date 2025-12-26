@@ -16,22 +16,28 @@ public class AuthController {
         this.userService = userService;
     }
 
-    // POST /auth/register
+    /**
+     * POST /auth/register
+     * Register a new user
+     */
     @PostMapping("/register")
     public String register(@RequestBody AuthRequest request) {
         User user = userService.registerCustomer(
-                "Demo User",
+                "User",
                 request.getEmail(),
                 request.getPassword()
         );
         return "User registered with id: " + user.getId();
     }
 
-    // POST /auth/login
+    /**
+     * POST /auth/login
+     * Login user (dummy token response for STEP-5)
+     */
     @PostMapping("/login")
     public AuthResponse login(@RequestBody AuthRequest request) {
         return new AuthResponse(
-                "dummy-jwt-token",
+                "dummy-token",
                 1L,
                 request.getEmail(),
                 "CUSTOMER"

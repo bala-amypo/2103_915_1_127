@@ -16,7 +16,10 @@ public class PriorityRuleController {
         this.priorityRuleService = priorityRuleService;
     }
 
-    // GET /rules/all
+    /**
+     * GET /rules/all
+     * List all active priority rules
+     */
     @GetMapping("/all")
     public List<PriorityRule> getAllRules() {
         return priorityRuleService.getActiveRules();
