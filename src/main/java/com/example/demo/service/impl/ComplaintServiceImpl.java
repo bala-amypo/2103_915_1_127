@@ -6,45 +6,48 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.ComplaintRepository;
 import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Service
 public class ComplaintServiceImpl implements ComplaintService {
 
     private final ComplaintRepository complaintRepository;
     private final PriorityRuleService priorityRuleService;
 
-    public ComplaintServiceImpl(ComplaintRepository complaintRepository,
-                                PriorityRuleService priorityRuleService) {
+    public ComplaintServiceImpl(
+            ComplaintRepository complaintRepository,
+            PriorityRuleService priorityRuleService
+    ) {
         this.complaintRepository = complaintRepository;
         this.priorityRuleService = priorityRuleService;
     }
 
     @Override
     public Complaint submitComplaint(ComplaintRequest request, User user) {
+        Complaint c = new Complaint();
+        c.setTitle(request.getTitle());
+        c.setDescription(request.getDescription());
+        c.setSeverity(request.getSeverity());
+        c.setUrgency(request.getUrgency());
+        c.setCustomer(user);
+        c.setStatus(Complaint.Status.NEW);
+        c.setCreatedAt(LocalDateTime.now());
 
-        Complaint complaint = new Complaint();
-        complaint.setTitle(request.getTitle());
-        complaint.setDescription(request.getDescription());
-        complaint.setCategory(request.getCategory());
-        complaint.setChannel(request.getChannel());
-        complaint.setSeverity(Complaint.Severity.valueOf(request.getSeverity()));
-        complaint.setUrgency(Complaint.Urgency.valueOf(request.getUrgency()));
-        complaint.setUser(user);
-        complaint.setStatus(Complaint.Status.OPEN);
-        complaint.setCreatedAt(LocalDateTime.now());
+        int score = priorityRuleService.computePriorityScore(c);
+        c.setPriorityScore(score);
 
-        int score = priorityRuleService.computePriorityScore(complaint);
-        complaint.setPriorityScore(score);
-
-        return complaintRepository.save(complaint);
+        return complaintRepository.save(c);
     }
 
     @Override
-    public List<Complaint> getAllComplaints() {
-        return complaintRepository.findAllOrderByPriorityScoreDescCreatedAtAsc();
+    public List<Complaint> getComplaintsForUser(User user) {
+        return complaintRepository.findByCustomer(user);
+    }
+
+    @Override
+    public List<Complaint> getPrioritizedComplaints() {
+        return complaintRepository
+                .findAllOrderByPriorityScoreDescCreatedAtAsc();
     }
 }

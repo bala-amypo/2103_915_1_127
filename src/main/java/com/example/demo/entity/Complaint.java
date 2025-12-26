@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Complaint {
@@ -12,8 +14,12 @@ public class Complaint {
 
     private String title;
     private String description;
-    private String category;
-    private String channel;
+
+    @ManyToOne
+    private User customer;
+
+    @ManyToOne
+    private User assignedAgent;
 
     @Enumerated(EnumType.STRING)
     private Severity severity;
@@ -28,25 +34,26 @@ public class Complaint {
 
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    private User user;
+    @ManyToMany
+    private List<PriorityRule> priorityRules = new ArrayList<>();
 
-    // ===== ENUMS =====
+    /* ===== ENUMS (TEST EXPECTED VALUES) ===== */
+
     public enum Severity {
-        LOW, MEDIUM, HIGH
+        LOW, MEDIUM, HIGH, CRITICAL
     }
 
     public enum Urgency {
-        LOW, MEDIUM, HIGH
+        LOW, NORMAL, HIGH, IMMEDIATE
     }
 
     public enum Status {
-        OPEN, IN_PROGRESS, RESOLVED
+        NEW, OPEN, IN_PROGRESS, RESOLVED
     }
 
-    // ===== GETTERS & SETTERS =====
+    /* ===== GETTERS & SETTERS ===== */
+
     public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -54,11 +61,11 @@ public class Complaint {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getCategory() { return category; }
-    public void setCategory(String category) { this.category = category; }
+    public User getCustomer() { return customer; }
+    public void setCustomer(User customer) { this.customer = customer; }
 
-    public String getChannel() { return channel; }
-    public void setChannel(String channel) { this.channel = channel; }
+    public User getAssignedAgent() { return assignedAgent; }
+    public void setAssignedAgent(User assignedAgent) { this.assignedAgent = assignedAgent; }
 
     public Severity getSeverity() { return severity; }
     public void setSeverity(Severity severity) { this.severity = severity; }
@@ -75,6 +82,5 @@ public class Complaint {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public List<PriorityRule> getPriorityRules() { return priorityRules; }
 }
