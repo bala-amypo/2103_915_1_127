@@ -22,13 +22,17 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
 
         int score = 0;
 
-        if (complaint.getSeverity() == Complaint.Severity.HIGH) score += 50;
-        else if (complaint.getSeverity() == Complaint.Severity.MEDIUM) score += 30;
-        else score += 10;
+        switch (complaint.getSeverity()) {
+            case HIGH -> score += 50;
+            case MEDIUM -> score += 30;
+            case LOW -> score += 10;
+        }
 
-        if (complaint.getUrgency() == Complaint.Urgency.HIGH) score += 40;
-        else if (complaint.getUrgency() == Complaint.Urgency.MEDIUM) score += 20;
-        else score += 5;
+        switch (complaint.getUrgency()) {
+            case HIGH -> score += 40;
+            case MEDIUM -> score += 20;
+            case LOW -> score += 5;
+        }
 
         complaint.setPriorityScore(score);
     }
