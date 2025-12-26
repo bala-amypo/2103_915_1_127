@@ -16,9 +16,8 @@ public class PriorityRuleController {
         this.priorityRuleService = priorityRuleService;
     }
 
-    // ✅ Interface has getAllRules(), NOT getActiveRules()
     @GetMapping
     public List<PriorityRule> getRules() {
-        return priorityRuleService.getAllRules();
+        return priorityRuleService.getRules();
     }
 }
