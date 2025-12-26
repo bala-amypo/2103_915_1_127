@@ -8,6 +8,7 @@ public class User {
 
     public enum Role {
         CUSTOMER,
+        AGENT,
         ADMIN
     }
 
@@ -15,10 +16,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ✅ name field ADD pannirukkom
-    private String name;
+    private String fullName;
 
-    @Column(unique = true)
     private String email;
 
     private String password;
@@ -26,18 +25,22 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // ---------- GETTERS & SETTERS ----------
+    // ===== getters & setters =====
 
     public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public void setId(Long id) {   // tests need this
+        this.id = id;
     }
 
-    public void setName(String name) {   // ✅ IMPORTANT
-        this.name = name;
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) { // tests need this
+        this.fullName = fullName;
     }
 
     public String getEmail() {
@@ -51,7 +54,7 @@ public class User {
     public String getPassword() {
         return password;
     }
-
+ 
     public void setPassword(String password) {
         this.password = password;
     }
@@ -59,7 +62,7 @@ public class User {
     public Role getRole() {
         return role;
     }
-
+ 
     public void setRole(Role role) {
         this.role = role;
     }
