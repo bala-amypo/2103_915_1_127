@@ -22,27 +22,19 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
 
         int score = 0;
 
-        if (complaint.getSeverity() == Complaint.Severity.HIGH) {
-            score += 50;
-        } else if (complaint.getSeverity() == Complaint.Severity.MEDIUM) {
-            score += 30;
-        } else {
-            score += 10;
-        }
+        if (complaint.getSeverity() == Complaint.Severity.HIGH) score += 50;
+        else if (complaint.getSeverity() == Complaint.Severity.MEDIUM) score += 30;
+        else score += 10;
 
-        if (complaint.getUrgency() == Complaint.Urgency.HIGH) {
-            score += 40;
-        } else if (complaint.getUrgency() == Complaint.Urgency.MEDIUM) {
-            score += 20;
-        } else {
-            score += 5;
-        }
+        if (complaint.getUrgency() == Complaint.Urgency.HIGH) score += 40;
+        else if (complaint.getUrgency() == Complaint.Urgency.MEDIUM) score += 20;
+        else score += 5;
 
         complaint.setPriorityScore(score);
     }
 
     @Override
-    public List<PriorityRule> getAllRules() {
-        return priorityRuleRepository.findAll();
+    public List<PriorityRule> getRules() {
+        return priorityRuleRepository.getRules();
     }
 }
