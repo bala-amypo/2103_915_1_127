@@ -9,7 +9,10 @@ public interface ComplaintService {
 
     Complaint submitComplaint(Complaint complaint);
 
+    List<Complaint> getAllComplaints();
+
     List<Complaint> getComplaintsForUser(User user);
 
+    // 🔴 THIS WAS MISSING
     List<Complaint> getPrioritizedComplaints();
 }
