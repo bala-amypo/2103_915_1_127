@@ -40,9 +40,9 @@ public class Complaint {
 
     private LocalDateTime createdAt;
 
-    /* 🔥 REQUIRED BY TEST */
-    @ElementCollection
-    private List<String> priorityRules = new ArrayList<>();
+    /* 🔥 THIS IS THE KEY FIX */
+    @ManyToMany
+    private List<PriorityRule> priorityRules = new ArrayList<>();
 
     @PrePersist
     void onCreate() {
@@ -62,8 +62,7 @@ public class Complaint {
     public void setStatus(Status status) { this.status = status; }
     public void setPriorityScore(Integer priorityScore) { this.priorityScore = priorityScore; }
 
-    // 🔥 REQUIRED BY TEST
-    public void setPriorityRules(List<String> priorityRules) {
+    public void setPriorityRules(List<PriorityRule> priorityRules) {
         this.priorityRules = priorityRules;
     }
 
@@ -78,8 +77,8 @@ public class Complaint {
     public Severity getSeverity() { return severity; }
     public Urgency getUrgency() { return urgency; }
 
-    // 🔥 REQUIRED BY TEST
-    public List<String> getPriorityRules() {
+    /* 🔥 REQUIRED BY TEST */
+    public List<PriorityRule> getPriorityRules() {
         return priorityRules;
     }
 }
