@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequest;
-import com.example.demo.dto.AuthResponse;
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,31 +15,13 @@ public class AuthController {
         this.userService = userService;
     }
 
-    /**
-     * POST /auth/register
-     * Register a new user
-     */
     @PostMapping("/register")
-    public String register(@RequestBody AuthRequest request) {
-        User user = userService.registerCustomer(
-                "User",
-                request.getEmail(),
-                request.getPassword()
-        );
-        return "User registered with id: " + user.getId();
-    }
+    public ResponseEntity<User> register(
+            @RequestParam String name,
+            @RequestParam String email,
+            @RequestParam String password) {
 
-    /**
-     * POST /auth/login
-     * Login user (dummy token response for STEP-5)
-     */
-    @PostMapping("/login")
-    public AuthResponse login(@RequestBody AuthRequest request) {
-        return new AuthResponse(
-                "dummy-token",
-                1L,
-                request.getEmail(),
-                "CUSTOMER"
-        );
+        User user = userService.registerCustomer(name, email, password);
+        return ResponseEntity.ok(user);
     }
 }
