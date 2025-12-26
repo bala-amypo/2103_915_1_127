@@ -1,26 +1,52 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.Complaint;
+
 public class ComplaintRequest {
 
-    private Long userId;
-    private String title;
+    private String category;
+    private String channel;
+    private Complaint.Severity severity;
+    private Complaint.Urgency urgency;
     private String description;
-    private String severity;   // STRING (tests expect this)
-    private String urgency;    // STRING
 
-    // getters & setters
-    public Long getUserId() { return userId; }
-    public void setUserId(Long userId) { this.userId = userId; }
+    public String getCategory() {
+        return category;
+    }
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    public String getChannel() {
+        return channel;
+    }
 
-    public String getSeverity() { return severity; }
-    public void setSeverity(String severity) { this.severity = severity; }
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
 
-    public String getUrgency() { return urgency; }
-    public void setUrgency(String urgency) { this.urgency = urgency; }
+    public Complaint.Severity getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(Complaint.Severity severity) {
+        this.severity = severity;
+    }
+
+    public Complaint.Urgency getUrgency() {
+        return urgency;
+    }
+
+    public void setUrgency(Complaint.Urgency urgency) {
+        this.urgency = urgency;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
