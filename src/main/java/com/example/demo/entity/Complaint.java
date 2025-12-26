@@ -2,6 +2,8 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Complaint {
@@ -38,12 +40,16 @@ public class Complaint {
 
     private LocalDateTime createdAt;
 
+    /* 🔥 REQUIRED BY TEST */
+    @ElementCollection
+    private List<String> priorityRules = new ArrayList<>();
+
     @PrePersist
     void onCreate() {
         createdAt = LocalDateTime.now();
     }
 
-    // ===== setters required by tests =====
+    // ===== setters =====
     public void setId(Long id) { this.id = id; }
     public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
@@ -56,7 +62,12 @@ public class Complaint {
     public void setStatus(Status status) { this.status = status; }
     public void setPriorityScore(Integer priorityScore) { this.priorityScore = priorityScore; }
 
-    // ===== getters required by tests =====
+    // 🔥 REQUIRED BY TEST
+    public void setPriorityRules(List<String> priorityRules) {
+        this.priorityRules = priorityRules;
+    }
+
+    // ===== getters =====
     public Long getId() { return id; }
     public String getTitle() { return title; }
     public String getCategory() { return category; }
@@ -66,4 +77,9 @@ public class Complaint {
     public Status getStatus() { return status; }
     public Severity getSeverity() { return severity; }
     public Urgency getUrgency() { return urgency; }
+
+    // 🔥 REQUIRED BY TEST
+    public List<String> getPriorityRules() {
+        return priorityRules;
+    }
 }
