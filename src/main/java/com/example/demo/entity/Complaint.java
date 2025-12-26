@@ -8,30 +8,27 @@ import java.util.List;
 @Entity
 public class Complaint {
 
-    // ===================== ENUMS =====================
+    // ================= ENUMS =================
     public enum Severity {
         LOW, MEDIUM, HIGH, CRITICAL
     }
 
     public enum Urgency {
-        LOW, MEDIUM, HIGH, IMMEDIATE   // ✅ IMMEDIATE REQUIRED BY TESTS
+        LOW, MEDIUM, HIGH, IMMEDIATE
     }
 
     public enum Status {
-        NEW, OPEN, IN_PROGRESS, RESOLVED, CLOSED   // ✅ NEW REQUIRED
+        NEW, OPEN, IN_PROGRESS, RESOLVED, CLOSED
     }
 
-    // ===================== FIELDS =====================
+    // ================= FIELDS =================
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
-
     private String description;
-
     private String category;
-
     private String channel;
 
     @Enumerated(EnumType.STRING)
@@ -43,7 +40,8 @@ public class Complaint {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private int priorityScore;
+    // ✅ MUST BE Integer (tests use null + dereference)
+    private Integer priorityScore;
 
     private LocalDateTime createdAt;
 
@@ -51,36 +49,39 @@ public class Complaint {
     private User customer;
 
     @ManyToOne
-    private User assignedAgent;   // ✅ REQUIRED BY TESTS
+    private User assignedAgent;
 
     @ManyToMany
     private List<PriorityRule> priorityRules = new ArrayList<>();
 
-    // ===================== GETTERS / SETTERS =====================
+    // ================= GETTERS / SETTERS =================
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {        // ✅ TESTS USE setId()
+    public void setId(Long id) {
         this.id = id;
     }
 
+    // -------- TITLE --------
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {   // ✅ REQUIRED
+    public void setTitle(String title) {
         this.title = title;
     }
 
+    // -------- DESCRIPTION --------
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {   // ✅ REQUIRED
+    public void setDescription(String description) {
         this.description = description;
     }
 
+    // -------- CATEGORY --------
     public String getCategory() {
         return category;
     }
@@ -89,6 +90,7 @@ public class Complaint {
         this.category = category;
     }
 
+    // -------- CHANNEL --------
     public String getChannel() {
         return channel;
     }
@@ -97,11 +99,11 @@ public class Complaint {
         this.channel = channel;
     }
 
-    public Severity getSeverity() {
-        return severity;
+    // -------- SEVERITY (STRING BASED) --------
+    public String getSeverity() {   // ✅ TEST EXPECTS STRING
+        return severity != null ? severity.name() : null;
     }
 
-    // ✅ STRING ACCEPTOR (TESTS PASS STRING)
     public void setSeverity(String severity) {
         this.severity = severity != null ? Severity.valueOf(severity) : null;
     }
@@ -110,11 +112,11 @@ public class Complaint {
         this.severity = severity;
     }
 
-    public Urgency getUrgency() {
-        return urgency;
+    // -------- URGENCY (STRING BASED) --------
+    public String getUrgency() {   // ✅ TEST EXPECTS STRING
+        return urgency != null ? urgency.name() : null;
     }
 
-    // ✅ STRING ACCEPTOR (TESTS PASS STRING)
     public void setUrgency(String urgency) {
         this.urgency = urgency != null ? Urgency.valueOf(urgency) : null;
     }
@@ -123,6 +125,7 @@ public class Complaint {
         this.urgency = urgency;
     }
 
+    // -------- STATUS --------
     public Status getStatus() {
         return status;
     }
@@ -131,14 +134,16 @@ public class Complaint {
         this.status = status;
     }
 
-    public int getPriorityScore() {
+    // -------- PRIORITY SCORE --------
+    public Integer getPriorityScore() {   // ✅ Integer REQUIRED
         return priorityScore;
     }
 
-    public void setPriorityScore(int priorityScore) {
+    public void setPriorityScore(Integer priorityScore) {
         this.priorityScore = priorityScore;
     }
 
+    // -------- CREATED AT --------
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -147,6 +152,7 @@ public class Complaint {
         this.createdAt = createdAt;
     }
 
+    // -------- CUSTOMER --------
     public User getCustomer() {
         return customer;
     }
@@ -155,14 +161,16 @@ public class Complaint {
         this.customer = customer;
     }
 
-    public User getAssignedAgent() {     // ✅ REQUIRED
+    // -------- ASSIGNED AGENT --------
+    public User getAssignedAgent() {
         return assignedAgent;
     }
 
-    public void setAssignedAgent(User assignedAgent) {   // ✅ REQUIRED
+    public void setAssignedAgent(User assignedAgent) {
         this.assignedAgent = assignedAgent;
     }
 
+    // -------- PRIORITY RULES --------
     public List<PriorityRule> getPriorityRules() {
         return priorityRules;
     }
