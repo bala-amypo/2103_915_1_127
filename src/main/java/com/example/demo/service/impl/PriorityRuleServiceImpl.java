@@ -34,7 +34,7 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
     }
 
     @Override
-    public List<PriorityRule> getRules() {
-        return priorityRuleRepository.getRules();
+    public List<PriorityRule> getActiveRules() {
+        return priorityRuleRepository.findAll();
     }
 }
