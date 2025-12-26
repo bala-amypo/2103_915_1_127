@@ -56,13 +56,13 @@ public class ComplaintServiceImpl implements ComplaintService {
         return complaintRepository.findAllOrderByPriorityScoreDescCreatedAtAsc();
     }
 
-    // ✅ REQUIRED BY INTERFACE
+    // ✅ MUST RETURN VOID
     @Override
-    public Complaint updateStatus(Long complaintId, String status) {
+    public void updateStatus(Long complaintId, String status) {
         Complaint complaint = complaintRepository.findById(complaintId)
                 .orElseThrow(() -> new ResourceNotFoundException("Complaint not found"));
 
         complaint.setStatus(Complaint.Status.valueOf(status));
-        return complaintRepository.save(complaint);
+        complaintRepository.save(complaint);
     }
 }

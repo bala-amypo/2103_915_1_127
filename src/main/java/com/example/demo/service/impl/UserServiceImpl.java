@@ -20,15 +20,19 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // ✅ MATCH INTERFACE EXACTLY
     @Override
-    public User registerCustomer(User user) {
+    public User registerCustomer(String name, String email, String password) {
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(email).isPresent()) {
             throw new BadRequestException("email already exists");
         }
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(User.Role.CUSTOMER); // ✅ ENUM FIX
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole(User.Role.CUSTOMER);
 
         return userRepository.save(user);
     }
@@ -39,7 +43,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
-    // ✅ REQUIRED BY INTERFACE
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)
