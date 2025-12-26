@@ -16,18 +16,7 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository complaintRepository;
     private final PriorityRuleService priorityRuleService;
 
-    // ✅ TEST EXPECTS THIS CONSTRUCTOR
-    public ComplaintServiceImpl(
-            ComplaintRepository complaintRepository,
-            Object ignored1,
-            Object ignored2,
-            PriorityRuleService priorityRuleService
-    ) {
-        this.complaintRepository = complaintRepository;
-        this.priorityRuleService = priorityRuleService;
-    }
-
-    // ✅ ALSO KEEP THIS (Spring usage)
+    // ⚠️ EXACT constructor tests expect
     public ComplaintServiceImpl(
             ComplaintRepository complaintRepository,
             PriorityRuleService priorityRuleService
@@ -39,12 +28,18 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     public Complaint submitComplaint(Complaint complaint) {
         complaint.setCreatedAt(LocalDateTime.now());
-        priorityRuleService.computePriorityScore(complaint);
+        int score = priorityRuleService.computePriorityScore(complaint);
+        complaint.setPriorityScore(score);
         return complaintRepository.save(complaint);
     }
 
     @Override
     public List<Complaint> getComplaintsForUser(User user) {
         return complaintRepository.findByCustomer(user);
+    }
+
+    @Override
+    public List<Complaint> getPrioritizedComplaints() {
+        return complaintRepository.findAllByOrderByPriorityScoreDescCreatedAtAsc();
     }
 }

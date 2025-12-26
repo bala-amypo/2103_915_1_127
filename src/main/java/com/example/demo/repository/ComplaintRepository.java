@@ -9,4 +9,6 @@ import java.util.List;
 public interface ComplaintRepository extends JpaRepository<Complaint, Long> {
 
     List<Complaint> findByCustomer(User user);
+
+    List<Complaint> findAllByOrderByPriorityScoreDescCreatedAtAsc();
 }
