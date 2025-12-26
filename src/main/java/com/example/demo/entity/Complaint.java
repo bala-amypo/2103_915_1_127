@@ -1,178 +1,176 @@
 package com.example.demo.entity;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 
+@Entity
 public class Complaint {
 
-    /* ================= ENUMS ================= */
-
-    public enum Severity {
-        CRITICAL, HIGH, MEDIUM, LOW
-    }
-
-    public enum Urgency {
-        IMMEDIATE, HIGH, MEDIUM, LOW
-    }
-
-    public enum Status {
-        NEW, IN_PROGRESS, RESOLVED, CLOSED
-    }
-
-    /* ================= FIELDS ================= */
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
     private String description;
-
     private String category;
     private String channel;
 
-    // 🔴 STORE AS STRING (TEST EXPECTATION)
+    // Stored as STRING (important for tests)
     private String severity;
     private String urgency;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
-    private User customer;
+
+    @ManyToOne
     private User assignedAgent;
 
-    // 🔴 MUST BE Integer (NOT int)
-    private Integer priorityScore;
+    // ================= ENUMS =================
 
-    private LocalDateTime createdAt;
+    public enum Severity {
+        CRITICAL,
+        HIGH,
+        MEDIUM,
+        LOW
+    }
 
-    private List<PriorityRule> priorityRules = new ArrayList<>();
+    public enum Urgency {
+        IMMEDIATE,
+        HIGH,
+        MEDIUM,
+        LOW
+    }
 
-    /* ================= GETTERS / SETTERS ================= */
+    public enum Status {
+        NEW,
+        ASSIGNED,
+        IN_PROGRESS,
+        RESOLVED
+    }
+
+    // ================= CONSTRUCTORS =================
+
+    // Default constructor (MANDATORY for JPA + tests)
+    public Complaint() {
+        this.status = Status.NEW;
+    }
+
+    // Constructor used by TESTS (ENUM version)
+    public Complaint(String title,
+                     String description,
+                     String category,
+                     String channel,
+                     Severity severity,
+                     Urgency urgency) {
+
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.channel = channel;
+        this.severity = severity.name();
+        this.urgency = urgency.name();
+        this.status = Status.NEW;
+    }
+
+    // Constructor used by some SERVICES (STRING version)
+    public Complaint(String title,
+                     String description,
+                     String category,
+                     String channel,
+                     String severity,
+                     String urgency) {
+
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.channel = channel;
+        this.severity = severity;
+        this.urgency = urgency;
+        this.status = Status.NEW;
+    }
+
+    // ================= GETTERS =================
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /* ---------- CATEGORY / CHANNEL ---------- */
-
     public String getCategory() {
         return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public String getChannel() {
         return channel;
     }
 
-    public void setChannel(String channel) {
-        this.channel = channel;
-    }
-
-    /* ---------- SEVERITY ---------- */
-
     public String getSeverity() {
         return severity;
     }
-
-    // ✅ TEST CALLS THIS
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
-
-    // ✅ TEST ALSO CALLS THIS
-    public void setSeverity(Severity severity) {
-        this.severity = severity.name();
-    }
-
-    /* ---------- URGENCY ---------- */
 
     public String getUrgency() {
         return urgency;
     }
 
-    // ✅ TEST CALLS THIS
-    public void setUrgency(String urgency) {
-        this.urgency = urgency;
-    }
-
-    // ✅ TEST ALSO CALLS THIS
-    public void setUrgency(Urgency urgency) {
-        this.urgency = urgency.name();
-    }
-
-    /* ---------- STATUS ---------- */
-
     public Status getStatus() {
         return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    /* ---------- USERS ---------- */
-
-    public User getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(User customer) {
-        this.customer = customer;
     }
 
     public User getAssignedAgent() {
         return assignedAgent;
     }
 
+    // ================= SETTERS =================
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    // String setters
+    public void setSeverity(String severity) {
+        this.severity = severity;
+    }
+
+    public void setUrgency(String urgency) {
+        this.urgency = urgency;
+    }
+
+    // Enum setters (used by tests)
+    public void setSeverity(Severity severity) {
+        this.severity = severity.name();
+    }
+
+    public void setUrgency(Urgency urgency) {
+        this.urgency = urgency.name();
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public void setAssignedAgent(User assignedAgent) {
         this.assignedAgent = assignedAgent;
-    }
-
-    /* ---------- PRIORITY ---------- */
-
-    public Integer getPriorityScore() {
-        return priorityScore;
-    }
-
-    public void setPriorityScore(Integer priorityScore) {
-        this.priorityScore = priorityScore;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    /* ---------- PRIORITY RULES ---------- */
-
-    public List<PriorityRule> getPriorityRules() {
-        return priorityRules;
-    }
-
-    public void setPriorityRules(List<PriorityRule> priorityRules) {
-        this.priorityRules = priorityRules;
     }
 }
