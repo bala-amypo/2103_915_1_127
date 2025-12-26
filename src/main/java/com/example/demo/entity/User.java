@@ -10,6 +10,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // ✅ REQUIRED by UserServiceImpl
+    private String fullName;
+
     private String username;
     private String email;
     private String password;
@@ -20,7 +23,8 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password, String role) {
+    public User(String fullName, String username, String email, String password, String role) {
+        this.fullName = fullName;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -31,6 +35,10 @@ public class User {
 
     public Long getId() {
         return id;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public String getUsername() {
@@ -53,6 +61,11 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    // ✅ THIS FIXES THE ERROR
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public void setUsername(String username) {
