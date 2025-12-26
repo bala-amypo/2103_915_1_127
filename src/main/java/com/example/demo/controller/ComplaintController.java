@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.dto.ComplaintRequest;
 import com.example.demo.entity.Complaint;
 import com.example.demo.service.ComplaintService;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +24,7 @@ public class ComplaintController {
         complaint.setTitle(request.getTitle());
         complaint.setDescription(request.getDescription());
 
-        // ✅ FIX: set userId (NOT User object)
-        complaint.setUserId(request.getUserId());
-
-        // ✅ String → Enum conversion
+        // ✅ String → Enum conversion (IMPORTANT)
         complaint.setSeverity(
                 Complaint.Severity.valueOf(
                         request.getSeverity().toUpperCase()
