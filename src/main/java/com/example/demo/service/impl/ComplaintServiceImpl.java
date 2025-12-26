@@ -7,6 +7,7 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ComplaintRepository;
 import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
+import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -16,11 +17,27 @@ import java.util.List;
 public class ComplaintServiceImpl implements ComplaintService {
 
     private final ComplaintRepository complaintRepository;
+    private final UserService userService;
+    private final Object unusedDependency; // tests pass null here
     private final PriorityRuleService priorityRuleService;
 
+    // 🔹 CONSTRUCTOR USED BY SPRING
     public ComplaintServiceImpl(ComplaintRepository complaintRepository,
                                 PriorityRuleService priorityRuleService) {
         this.complaintRepository = complaintRepository;
+        this.userService = null;
+        this.unusedDependency = null;
+        this.priorityRuleService = priorityRuleService;
+    }
+
+    // 🔹 CONSTRUCTOR USED BY TEST CASES (VERY IMPORTANT)
+    public ComplaintServiceImpl(ComplaintRepository complaintRepository,
+                                UserService userService,
+                                Object unusedDependency,
+                                PriorityRuleService priorityRuleService) {
+        this.complaintRepository = complaintRepository;
+        this.userService = userService;
+        this.unusedDependency = unusedDependency;
         this.priorityRuleService = priorityRuleService;
     }
 
@@ -56,7 +73,6 @@ public class ComplaintServiceImpl implements ComplaintService {
         return complaintRepository.findAllOrderByPriorityScoreDescCreatedAtAsc();
     }
 
-    // ✅ MUST RETURN VOID
     @Override
     public void updateStatus(Long complaintId, String status) {
         Complaint complaint = complaintRepository.findById(complaintId)
