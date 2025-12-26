@@ -8,28 +8,30 @@ import java.util.List;
 @Entity
 public class Complaint {
 
-    // ===== ENUMS =====
+    // ===================== ENUMS =====================
     public enum Severity {
         LOW, MEDIUM, HIGH, CRITICAL
     }
 
     public enum Urgency {
-        LOW, MEDIUM, HIGH
+        LOW, MEDIUM, HIGH, IMMEDIATE   // ✅ IMMEDIATE REQUIRED BY TESTS
     }
 
     public enum Status {
-        OPEN, IN_PROGRESS, RESOLVED, CLOSED
+        NEW, OPEN, IN_PROGRESS, RESOLVED, CLOSED   // ✅ NEW REQUIRED
     }
 
-    // ===== FIELDS =====
+    // ===================== FIELDS =====================
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;          // ✅ REQUIRED BY TESTS
+    private String title;
+
     private String description;
 
     private String category;
+
     private String channel;
 
     @Enumerated(EnumType.STRING)
@@ -39,38 +41,35 @@ public class Complaint {
     private Urgency urgency;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.OPEN;
+    private Status status;
 
-    private int priorityScore = 0;
+    private int priorityScore;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @ManyToOne
     private User customer;
 
+    @ManyToOne
+    private User assignedAgent;   // ✅ REQUIRED BY TESTS
+
     @ManyToMany
-    @JoinTable(
-        name = "complaint_priority_rule",
-        joinColumns = @JoinColumn(name = "complaint_id"),
-        inverseJoinColumns = @JoinColumn(name = "rule_id")
-    )
     private List<PriorityRule> priorityRules = new ArrayList<>();
 
-    // ===== GETTERS & SETTERS =====
-
+    // ===================== GETTERS / SETTERS =====================
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {        // ✅ tests use setId()
+    public void setId(Long id) {        // ✅ TESTS USE setId()
         this.id = id;
     }
 
-    public String getTitle() {           // ✅ REQUIRED
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) { // ✅ REQUIRED
+    public void setTitle(String title) {   // ✅ REQUIRED
         this.title = title;
     }
 
@@ -78,7 +77,7 @@ public class Complaint {
         return description;
     }
 
-    public void setDescription(String description) { // ✅ REQUIRED
+    public void setDescription(String description) {   // ✅ REQUIRED
         this.description = description;
     }
 
@@ -86,7 +85,7 @@ public class Complaint {
         return category;
     }
 
-    public void setCategory(String category) { // ✅ REQUIRED
+    public void setCategory(String category) {
         this.category = category;
     }
 
@@ -94,12 +93,17 @@ public class Complaint {
         return channel;
     }
 
-    public void setChannel(String channel) { // ✅ REQUIRED
+    public void setChannel(String channel) {
         this.channel = channel;
     }
 
     public Severity getSeverity() {
         return severity;
+    }
+
+    // ✅ STRING ACCEPTOR (TESTS PASS STRING)
+    public void setSeverity(String severity) {
+        this.severity = severity != null ? Severity.valueOf(severity) : null;
     }
 
     public void setSeverity(Severity severity) {
@@ -110,17 +114,13 @@ public class Complaint {
         return urgency;
     }
 
+    // ✅ STRING ACCEPTOR (TESTS PASS STRING)
+    public void setUrgency(String urgency) {
+        this.urgency = urgency != null ? Urgency.valueOf(urgency) : null;
+    }
+
     public void setUrgency(Urgency urgency) {
         this.urgency = urgency;
-    }
-
-    // ✅ TESTS COMPARE STRING VALUES
-    public String getSeverityValue() {
-        return severity != null ? severity.name() : null;
-    }
-
-    public String getUrgencyValue() {
-        return urgency != null ? urgency.name() : null;
     }
 
     public Status getStatus() {
@@ -151,11 +151,19 @@ public class Complaint {
         return customer;
     }
 
-    public void setCustomer(User customer) { // ✅ REQUIRED
+    public void setCustomer(User customer) {
         this.customer = customer;
     }
 
-    public List<PriorityRule> getPriorityRules() { // ✅ REQUIRED
+    public User getAssignedAgent() {     // ✅ REQUIRED
+        return assignedAgent;
+    }
+
+    public void setAssignedAgent(User assignedAgent) {   // ✅ REQUIRED
+        this.assignedAgent = assignedAgent;
+    }
+
+    public List<PriorityRule> getPriorityRules() {
         return priorityRules;
     }
 
