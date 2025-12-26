@@ -10,14 +10,6 @@ public class AuthResponse {
     public AuthResponse() {
     }
 
-    // Existing constructor (keep)
-    public AuthResponse(String token, String email, Long userId) {
-        this.token = token;
-        this.email = email;
-        this.userId = userId;
-    }
-
-    // Required for STEP-5 controllers
     public AuthResponse(String token, Long userId, String email, String role) {
         this.token = token;
         this.userId = userId;
@@ -29,15 +21,31 @@ public class AuthResponse {
         return token;
     }
 
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public Long getUserId() {
         return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getRole() {
         return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

@@ -1,8 +1,9 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Complaint {
@@ -16,199 +17,136 @@ public class Complaint {
     private String category;
     private String channel;
 
-    // Stored as STRING (tests + services expect this)
-    private String severity;
-    private String urgency;
-
-    // ⭐ REQUIRED FOR TESTS
     private Integer priorityScore;
 
+    private LocalDateTime createdAt;
+
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.NEW;
 
-    // ===== RELATIONS =====
+    @Enumerated(EnumType.STRING)
+    private Severity severity;
 
+    @Enumerated(EnumType.STRING)
+    private Urgency urgency;
+
+    // Customer who raised the complaint
     @ManyToOne
     private User customer;
 
+    // Agent assigned to handle the complaint (REQUIRED BY TEST)
     @ManyToOne
     private User assignedAgent;
 
     @ManyToMany
-    private List<PriorityRule> priorityRules = new ArrayList<>();
+    private Set<PriorityRule> priorityRules = new HashSet<>();
 
-    // ===== ENUMS =====
-
-    public enum Severity {
-        CRITICAL,
-        HIGH,
-        MEDIUM,
-        LOW
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 
-    public enum Urgency {
-        IMMEDIATE,
-        HIGH,
-        MEDIUM,
-        LOW
-    }
+    public enum Status { NEW, OPEN, IN_PROGRESS, RESOLVED }
+    public enum Severity { LOW, MEDIUM, HIGH, CRITICAL }
+    public enum Urgency { LOW, MEDIUM, HIGH, IMMEDIATE }
 
-    public enum Status {
-        NEW,
-        ASSIGNED,
-        IN_PROGRESS,
-        RESOLVED
-    }
-
-    // ===== CONSTRUCTORS =====
-
-    public Complaint() {
-        this.status = Status.NEW;
-    }
-
-    // ✅ TESTS USE THIS (ENUM INPUT)
-    public Complaint(String title,
-                     String description,
-                     String category,
-                     String channel,
-                     Severity severity,
-                     Urgency urgency) {
-
-        this.title = title;
-        this.description = description;
-        this.category = category;
-        this.channel = channel;
-        this.severity = severity.name();
-        this.urgency = urgency.name();
-        this.status = Status.NEW;
-    }
-
-    // ✅ SERVICES USE THIS (STRING INPUT)
-    public Complaint(String title,
-                     String description,
-                     String category,
-                     String channel,
-                     String severity,
-                     String urgency) {
-
-        this.title = title;
-        this.description = description;
-        this.category = category;
-        this.channel = channel;
-        this.severity = severity;
-        this.urgency = urgency;
-        this.status = Status.NEW;
-    }
-
-    // ===== GETTERS =====
+    // ---------- Getters & Setters ----------
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public String getChannel() {
-        return channel;
-    }
-
-    public String getSeverity() {
-        return severity;
-    }
-
-    public String getUrgency() {
-        return urgency;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public User getCustomer() {
-        return customer;
-    }
-
-    public User getAssignedAgent() {
-        return assignedAgent;
-    }
-
-    public List<PriorityRule> getPriorityRules() {
-        return priorityRules;
-    }
-
-    // ⭐ TESTS REQUIRE THIS
-    public Integer getPriorityScore() {
-        return priorityScore;
-    }
-
-    // ===== SETTERS =====
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getChannel() {
+        return channel;
     }
 
     public void setChannel(String channel) {
         this.channel = channel;
     }
 
-    // STRING setters
-    public void setSeverity(String severity) {
-        this.severity = severity;
+    public Integer getPriorityScore() {
+        return priorityScore;
     }
 
-    public void setUrgency(String urgency) {
-        this.urgency = urgency;
+    public void setPriorityScore(Integer priorityScore) {
+        this.priorityScore = priorityScore;
     }
 
-    // ENUM setters (TESTS USE THIS)
-    public void setSeverity(Severity severity) {
-        this.severity = severity.name();
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setUrgency(Urgency urgency) {
-        this.urgency = urgency.name();
+    public Status getStatus() {
+        return status;
     }
 
     public void setStatus(Status status) {
         this.status = status;
     }
 
+    public Severity getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(Severity severity) {
+        this.severity = severity;
+    }
+
+    public Urgency getUrgency() {
+        return urgency;
+    }
+
+    public void setUrgency(Urgency urgency) {
+        this.urgency = urgency;
+    }
+
+    public User getCustomer() {
+        return customer;
+    }
+
     public void setCustomer(User customer) {
         this.customer = customer;
     }
 
+    // ✅ REQUIRED BY TESTS
+    public User getAssignedAgent() {
+        return assignedAgent;
+    }
+
+    // ✅ REQUIRED BY TESTS
     public void setAssignedAgent(User assignedAgent) {
         this.assignedAgent = assignedAgent;
     }
 
-    public void setPriorityRules(List<PriorityRule> priorityRules) {
-        this.priorityRules = priorityRules;
-    }
-
-    // ⭐ TESTS REQUIRE THIS (null-um accept pannum)
-    public void setPriorityScore(Integer priorityScore) {
-        this.priorityScore = priorityScore;
+    public Set<PriorityRule> getPriorityRules() {
+        return priorityRules;
     }
 }
