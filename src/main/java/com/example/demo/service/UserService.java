@@ -8,6 +8,5 @@ public interface UserService {
 
     User findByEmail(String email);
 
-    // Required for STEP-5
     User findById(Long id);
 }
