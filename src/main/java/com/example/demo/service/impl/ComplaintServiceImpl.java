@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Complaint;
-import com.example.demo.entity.User;
 import com.example.demo.repository.ComplaintRepository;
 import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
@@ -16,30 +15,48 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository complaintRepository;
     private final PriorityRuleService priorityRuleService;
 
-    // ⚠️ EXACT constructor tests expect
-    public ComplaintServiceImpl(
-            ComplaintRepository complaintRepository,
-            PriorityRuleService priorityRuleService
-    ) {
+    // ✅ Constructor EXACTLY matches tests
+    public ComplaintServiceImpl(ComplaintRepository complaintRepository,
+                                PriorityRuleService priorityRuleService) {
         this.complaintRepository = complaintRepository;
         this.priorityRuleService = priorityRuleService;
     }
 
+    // ✅ This method is REQUIRED by interface + tests
     @Override
     public Complaint submitComplaint(Complaint complaint) {
+
+        // default values set pannrom
         complaint.setCreatedAt(LocalDateTime.now());
-        int score = priorityRuleService.computePriorityScore(complaint);
-        complaint.setPriorityScore(score);
+        complaint.setStatus(Complaint.Status.NEW);
+
+        // ✅ VERY IMPORTANT LINE (you asked to verify this)
+        complaint.setPriorityScore(
+                priorityRuleService.computePriorityScore(complaint)
+        );
+
+        // rules apply (relation maintain panna)
+        priorityRuleService.applyRules(complaint);
+
         return complaintRepository.save(complaint);
     }
 
+    // ✅ Used in tests
     @Override
-    public List<Complaint> getComplaintsForUser(User user) {
+    public List<Complaint> getAllComplaints() {
+        return complaintRepository.findAll();
+    }
+
+    // ✅ Used in tests
+    @Override
+    public List<Complaint> getComplaintsForUser(com.example.demo.entity.User user) {
         return complaintRepository.findByCustomer(user);
     }
 
+    // ✅ Used in tests (sorting logic)
     @Override
     public List<Complaint> getPrioritizedComplaints() {
-        return complaintRepository.findAllByOrderByPriorityScoreDescCreatedAtAsc();
+        return complaintRepository
+                .findAllOrderByPriorityScoreDescCreatedAtAsc();
     }
 }

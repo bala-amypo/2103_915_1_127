@@ -9,6 +9,8 @@ public interface PriorityRuleService {
 
     void applyRules(Complaint complaint);
 
+    int computePriorityScore(Complaint complaint); // ✅ ADD THIS
+
     List<PriorityRule> getAllRules();
 
     List<PriorityRule> getActiveRules();
