@@ -1,12 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Complaint;
-import com.example.demo.entity.PriorityRule;
 import com.example.demo.repository.PriorityRuleRepository;
 import com.example.demo.service.PriorityRuleService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PriorityRuleServiceImpl implements PriorityRuleService {
@@ -18,7 +15,7 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
     }
 
     @Override
-    public void calculatePriorityScore(Complaint complaint) {
+    public void computePriorityScore(Complaint complaint) {
 
         int score = 0;
 
@@ -35,10 +32,5 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
         }
 
         complaint.setPriorityScore(score);
-    }
-
-    @Override
-    public List<PriorityRule> getActiveRules() {
-        return priorityRuleRepository.findAll();
     }
 }
