@@ -19,6 +19,9 @@ public class Complaint {
     @Enumerated(EnumType.STRING)
     private Urgency urgency;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     private int priorityScore;
 
     private LocalDateTime createdAt;
@@ -26,7 +29,7 @@ public class Complaint {
     @ManyToOne
     private User customer;
 
-    // ===== enums =====
+    // ===== ENUMS =====
     public enum Severity {
         LOW, MEDIUM, HIGH
     }
@@ -35,7 +38,11 @@ public class Complaint {
         LOW, MEDIUM, HIGH
     }
 
-    // ===== getters & setters =====
+    public enum Status {
+        OPEN, IN_PROGRESS, RESOLVED
+    }
+
+    // ===== GETTERS & SETTERS =====
     public Long getId() { return id; }
 
     public String getTitle() { return title; }
@@ -49,6 +56,9 @@ public class Complaint {
 
     public Urgency getUrgency() { return urgency; }
     public void setUrgency(Urgency urgency) { this.urgency = urgency; }
+
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
 
     public int getPriorityScore() { return priorityScore; }
     public void setPriorityScore(int priorityScore) { this.priorityScore = priorityScore; }
