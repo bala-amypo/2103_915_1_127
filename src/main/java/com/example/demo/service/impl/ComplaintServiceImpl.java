@@ -3,10 +3,10 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.ComplaintRequest;
 import com.example.demo.entity.Complaint;
 import com.example.demo.entity.User;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ComplaintRepository;
 import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -18,11 +18,8 @@ public class ComplaintServiceImpl implements ComplaintService {
     private final ComplaintRepository complaintRepository;
     private final PriorityRuleService priorityRuleService;
 
-    @Autowired
-    public ComplaintServiceImpl(
-            ComplaintRepository complaintRepository,
-            PriorityRuleService priorityRuleService) {
-
+    public ComplaintServiceImpl(ComplaintRepository complaintRepository,
+                                PriorityRuleService priorityRuleService) {
         this.complaintRepository = complaintRepository;
         this.priorityRuleService = priorityRuleService;
     }
@@ -57,5 +54,15 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     public List<Complaint> getPrioritizedComplaints() {
         return complaintRepository.findAllOrderByPriorityScoreDescCreatedAtAsc();
+    }
+
+    // ✅ REQUIRED BY INTERFACE
+    @Override
+    public Complaint updateStatus(Long complaintId, String status) {
+        Complaint complaint = complaintRepository.findById(complaintId)
+                .orElseThrow(() -> new ResourceNotFoundException("Complaint not found"));
+
+        complaint.setStatus(Complaint.Status.valueOf(status));
+        return complaintRepository.save(complaint);
     }
 }
