@@ -6,39 +6,47 @@ import com.example.demo.entity.User;
 import com.example.demo.repository.ComplaintRepository;
 import com.example.demo.service.ComplaintService;
 import com.example.demo.service.PriorityRuleService;
-import com.example.demo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 public class ComplaintServiceImpl implements ComplaintService {
 
     private final ComplaintRepository complaintRepository;
-    private final UserService userService;
     private final PriorityRuleService priorityRuleService;
 
-    public ComplaintServiceImpl(ComplaintRepository complaintRepository,
-                                UserService userService,
-                                PriorityRuleService priorityRuleService,
-                                PriorityRuleService ignored) {
+    @Autowired
+    public ComplaintServiceImpl(
+            ComplaintRepository complaintRepository,
+            PriorityRuleService priorityRuleService) {
+
         this.complaintRepository = complaintRepository;
-        this.userService = userService;
         this.priorityRuleService = priorityRuleService;
     }
 
     @Override
-    public Complaint submitComplaint(ComplaintRequest req, User user) {
-        Complaint c = new Complaint();
-        c.setTitle(req.getTitle());
-        c.setDescription(req.getDescription());
-        c.setCategory(req.getCategory());
-        c.setChannel(req.getChannel());
-        c.setSeverity(req.getSeverity());
-        c.setUrgency(req.getUrgency());
-        c.setCustomer(user);
-        c.setPriorityScore(priorityRuleService.computePriorityScore(c));
-        return complaintRepository.save(c);
+    public Complaint submitComplaint(ComplaintRequest request, User customer) {
+
+        Complaint complaint = new Complaint();
+        complaint.setTitle(request.getTitle());
+        complaint.setDescription(request.getDescription());
+        complaint.setCategory(request.getCategory());
+        complaint.setChannel(request.getChannel());
+        complaint.setSeverity(request.getSeverity());
+        complaint.setUrgency(request.getUrgency());
+        complaint.setCustomer(customer);
+
+        if (complaint.getPriorityRules() == null) {
+            complaint.setPriorityRules(new HashSet<>());
+        }
+
+        int score = priorityRuleService.computePriorityScore(complaint);
+        complaint.setPriorityScore(score);
+
+        return complaintRepository.save(complaint);
     }
 
     @Override
@@ -49,12 +57,5 @@ public class ComplaintServiceImpl implements ComplaintService {
     @Override
     public List<Complaint> getPrioritizedComplaints() {
         return complaintRepository.findAllOrderByPriorityScoreDescCreatedAtAsc();
-    }
-
-    @Override
-    public void updateStatus(Long id, String status) {
-        Complaint c = complaintRepository.findById(id).orElseThrow();
-        c.setStatus(Complaint.Status.valueOf(status));
-        complaintRepository.save(c);
     }
 }
