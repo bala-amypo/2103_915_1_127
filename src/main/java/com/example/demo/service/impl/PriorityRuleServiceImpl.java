@@ -20,18 +20,20 @@ public class PriorityRuleServiceImpl implements PriorityRuleService {
     @Override
     public void applyRules(Complaint complaint) {
 
-        List<PriorityRule> rules = priorityRuleRepository.findAll();
+        List<PriorityRule> rules = getActiveRules();
 
         for (PriorityRule rule : rules) {
-            if (rule.isActive()) {
-                // 🔥 FIX: no + operator, just apply
-                rule.apply(complaint);
-            }
+            rule.apply(complaint); // ✅ void method, no +
         }
     }
 
     @Override
     public List<PriorityRule> getAllRules() {
         return priorityRuleRepository.findAll();
+    }
+
+    @Override
+    public List<PriorityRule> getActiveRules() {
+        return priorityRuleRepository.findByActiveTrue();
     }
 }

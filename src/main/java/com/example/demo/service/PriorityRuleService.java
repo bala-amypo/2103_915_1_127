@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface PriorityRuleService {
 
-    int computePriorityScore(Complaint complaint);
+    void applyRules(Complaint complaint);
+
+    List<PriorityRule> getAllRules();
 
     List<PriorityRule> getActiveRules();
 }
