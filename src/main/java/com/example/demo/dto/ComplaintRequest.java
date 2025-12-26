@@ -1,37 +1,57 @@
 package com.example.demo.dto;
 
-import com.example.demo.entity.Complaint;
+import com.example.demo.entity.Severity;
+import com.example.demo.entity.Urgency;
 
 public class ComplaintRequest {
 
+    private Long userId;        // 🔥 REQUIRED
     private String title;
     private String description;
-    private String category;
-    private String channel;
-    private Complaint.Severity severity;
-    private Complaint.Urgency urgency;
+    private Severity severity;
+    private Urgency urgency;
 
-    public String getTitle() { return title; }
+    // ----- GETTERS -----
 
-    public void setTitle(String title) { this.title = title; }
+    public Long getUserId() {
+        return userId;
+    }
 
-    public String getDescription() { return description; }
+    public String getTitle() {
+        return title;
+    }
 
-    public void setDescription(String description) { this.description = description; }
+    public String getDescription() {
+        return description;
+    }
 
-    public String getCategory() { return category; }
+    public Severity getSeverity() {
+        return severity;
+    }
 
-    public void setCategory(String category) { this.category = category; }
+    public Urgency getUrgency() {
+        return urgency;
+    }
 
-    public String getChannel() { return channel; }
+    // ----- SETTERS -----
 
-    public void setChannel(String channel) { this.channel = channel; }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-    public Complaint.Severity getSeverity() { return severity; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public void setSeverity(Complaint.Severity severity) { this.severity = severity; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public Complaint.Urgency getUrgency() { return urgency; }
+    public void setSeverity(Severity severity) {
+        this.severity = severity;
+    }
 
-    public void setUrgency(Complaint.Urgency urgency) { this.urgency = urgency; }
+    public void setUrgency(Urgency urgency) {
+        this.urgency = urgency;
+    }
 }
